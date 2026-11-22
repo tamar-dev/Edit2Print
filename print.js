@@ -2,9 +2,9 @@ const t = uiText;
 const uiLang = chrome.i18n.getUILanguage();
 document.documentElement.lang = uiLang;
 document.documentElement.dir = /^(he|ar|fa|ur)(-|$)/i.test(uiLang) ? 'rtl' : 'ltr';
-const labels = {en:{undo:'Undo',redo:'Redo',add:'Add text',remove:'Remove',hint:'Select text to format it. Edit text directly. Select an image and press Delete or Backspace to remove it. Use Ctrl+Z to undo and Ctrl+P to print.'},he:{undo:'בטל',redo:'בצע שוב',add:'הוסף טקסט',remove:'הסר',hint:'סמנו טקסט כדי לעצב אותו. ניתן לערוך ישירות. בחרו תמונה ולחצו Delete או Backspace להסרה. Ctrl+Z לביטול ו־Ctrl+P להדפסה.'}};
+const labels = {en:{undo:'Undo',redo:'Redo',add:'Add text',remove:'Remove',block:'Select block',hint:'Select text to format it. Edit text directly. Select an image and press Delete or Backspace to remove it. Use Ctrl+Z to undo and Ctrl+P to print.'},he:{undo:'בטל',redo:'בצע שוב',add:'הוסף טקסט',remove:'הסר',block:'בחר רכיב',hint:'סמנו טקסט כדי לעצב אותו. ניתן לערוך ישירות. בחרו תמונה ולחצו Delete או Backspace להסרה. Ctrl+Z לביטול ו־Ctrl+P להדפסה.'}};
 const l = labels[uiLang.split(/[-_]/)[0].toLowerCase()] || labels.en;
-for (const [id,value] of [['print-label',t('printButton')],['undo-label',l.undo],['redo-label',l.redo],['add-label',l.add],['remove-label',l.remove],['hint',l.hint]]) document.getElementById(id).textContent=value;
+for (const [id,value] of [['print-label',t('printButton')],['undo-label',l.undo],['redo-label',l.redo],['add-label',l.add],['remove-label',l.remove],['select-block-label',l.block],['hint',l.hint]]) document.getElementById(id).textContent=value;
 const formattingLabels=uiLang.toLowerCase().startsWith('he')?{size:'גודל',color:'צבע',bold:'מודגש',italic:'נטוי',underline:'קו תחתון'}:{size:'Size',color:'Color',bold:'Bold',italic:'Italic',underline:'Underline'};
 for(const [id,value] of [['font-size-label',formattingLabels.size],['font-color-label',formattingLabels.color]])document.getElementById(id).textContent=value;
 for(const key of ['bold','italic','underline'])document.getElementById(key).setAttribute('aria-label',formattingLabels[key]);
@@ -19,13 +19,22 @@ document.getElementById('font-size').setAttribute('aria-label',isHebrew?'גוד�
 document.getElementById('font-color').setAttribute('aria-label',isHebrew?'צבע טקסט':'Text color');
 const status=document.getElementById('status');
 const undoButton=document.getElementById('undo'), redoButton=document.getElementById('redo');
-let history=[],position=-1,selectedImage=null,restoring=false,recordTimer,savedRange=null;
+let history=[],position=-1,selectedImage=null,selectedBlock=null,blockMode=false,restoring=false,recordTimer,savedRange=null;
+const blockButton=document.getElementById('select-block');
+const blockTags=new Set(['P','DIV','SECTION','ARTICLE','HEADER','FOOTER','MAIN','H1','H2','H3','H4','H5','H6','UL','OL','LI','BLOCKQUOTE','PRE','TABLE','TR','FIGURE','FIGCAPTION','DL','DT','DD','IMG']);
+function clearBlockSelection(){if(selectedBlock)selectedBlock.classList.remove('selected-block');selectedBlock=null;}
+function setBlockMode(enabled){blockMode=enabled;blockButton.setAttribute('aria-pressed',String(enabled));content.classList.toggle('block-mode',enabled);content.contentEditable=enabled?'false':'true';clearBlockSelection();clearImageSelection();}
+blockButton.addEventListener('click',()=>setBlockMode(!blockMode));
+function pickBlock(target){if(!(target instanceof Element)||!content.contains(target))return null;let current=target;while(current&&current!==content){if(blockTags.has(current.tagName))return current;current=current.parentElement;}return null;}
+content.addEventListener('click',event=>{if(!blockMode)return;const block=pickBlock(event.target);clearBlockSelection();if(block){selectedBlock=block;selectedBlock.classList.add('selected-block');}});
+function removeSelectedBlock(){if(!selectedBlock)return false;clearTimeout(recordTimer);snapshot();const block=selectedBlock;clearBlockSelection();block.remove();snapshot();return true;}
+
 function prepareImages(){for(const img of content.querySelectorAll('img')){img.tabIndex=0;img.setAttribute('aria-label',(img.alt||(isHebrew?'תמונה':'Image'))+(isHebrew?' — Enter לבחירה, Delete למחיקה':' — Enter to select, Delete to remove'));}}
 function removeSelectedImage(){if(!selectedImage)return false;clearTimeout(recordTimer);snapshot();const image=selectedImage;clearImageSelection();image.remove();snapshot();content.focus();return true;}
 function clearImageSelection(){ if(selectedImage) selectedImage.classList.remove('selected-for-removal'); selectedImage=null; }
-function snapshot(){if(restoring)return;const html=content.innerHTML.replace(/ class="selected-for-removal"/g,'');if(history[position]===html)return;history=history.slice(0,position+1);history.push(html);if(history.length>80)history.shift();position=history.length-1;refresh();}
+function snapshot(){if(restoring)return;const html=content.innerHTML.replace(/ class="selected-for-removal"/g,'').replace(/ class="selected-block"/g,'');if(history[position]===html)return;history=history.slice(0,position+1);history.push(html);if(history.length>80)history.shift();position=history.length-1;refresh();}
 function refresh(){undoButton.disabled=position<=0;redoButton.disabled=position>=history.length-1;}
-function restore(next){if(next<0||next>=history.length)return;restoring=true;clearImageSelection();content.innerHTML=history[next];prepareImages();position=next;refresh();restoring=false;content.focus();}
+function restore(next){if(next<0||next>=history.length)return;restoring=true;clearBlockSelection();clearImageSelection();content.innerHTML=history[next];prepareImages();position=next;refresh();restoring=false;content.focus();}
 function safeTextStyle(style){
   const result=[];
   for(const declaration of style.split(';')){
@@ -111,12 +120,12 @@ for(const button of document.querySelectorAll('.toolbar button')){
 }
 
 content.addEventListener('input',()=>{clearTimeout(recordTimer);recordTimer=setTimeout(snapshot,250);});
-content.addEventListener('focusin',event=>{if(event.target instanceof HTMLImageElement){clearImageSelection();selectedImage=event.target;selectedImage.classList.add('selected-for-removal');}});
-content.addEventListener('click',event=>{const image=event.target.closest?.('img');clearImageSelection();if(image&&content.contains(image)){selectedImage=image;image.classList.add('selected-for-removal');}});
+content.addEventListener('focusin',event=>{if(blockMode)return;if(event.target instanceof HTMLImageElement){clearImageSelection();selectedImage=event.target;selectedImage.classList.add('selected-for-removal');}});
+content.addEventListener('click',event=>{if(blockMode)return;const image=event.target.closest?.('img');clearImageSelection();if(image&&content.contains(image)){selectedImage=image;image.classList.add('selected-for-removal');}});
 content.addEventListener('paste',event=>{event.preventDefault();const text=event.clipboardData?.getData('text/plain')||'';const selection=window.getSelection();if(!selection?.rangeCount)return;const range=selection.getRangeAt(0);if(!content.contains(range.commonAncestorContainer))return;range.deleteContents();const node=document.createTextNode(text);range.insertNode(node);range.setStartAfter(node);range.collapse(true);selection.removeAllRanges();selection.addRange(range);snapshot();});
 document.getElementById('remove').addEventListener('click',()=>{
   clearTimeout(recordTimer);
-  if(removeSelectedImage())return;
+  if(removeSelectedBlock()||removeSelectedImage())return;
   const selection=window.getSelection();if(!selection?.rangeCount||selection.isCollapsed)return;
   const range=selection.getRangeAt(0);if(!content.contains(range.commonAncestorContainer))return;
   range.deleteContents();snapshot();content.focus();
@@ -138,6 +147,7 @@ document.addEventListener('keydown',event=>{
     return;
   }
   if(event.altKey||event.ctrlKey||event.metaKey)return;
+  if((key==='delete'||key==='backspace')&&selectedBlock){event.preventDefault();removeSelectedBlock();return;}
   if((key==='delete'||key==='backspace')&&selectedImage){
     event.preventDefault();removeSelectedImage();return;
   }
@@ -148,7 +158,7 @@ document.addEventListener('keydown',event=>{
 document.getElementById('add-text').addEventListener('click',()=>{clearImageSelection();const p=document.createElement('p');p.appendChild(document.createElement('br'));content.appendChild(p);snapshot();content.focus();const range=document.createRange();range.selectNodeContents(p);range.collapse(true);const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);});
 undoButton.addEventListener('click',()=>{clearTimeout(recordTimer);snapshot();restore(position-1);});
 redoButton.addEventListener('click',()=>{clearTimeout(recordTimer);restore(position+1);});
-document.getElementById('print').addEventListener('click',()=>{clearTimeout(recordTimer);snapshot();clearImageSelection();window.print();});
+document.getElementById('print').addEventListener('click',()=>{clearTimeout(recordTimer);snapshot();clearBlockSelection();clearImageSelection();window.print();});
 (async()=>{
  const id=new URLSearchParams(location.search).get('id');
  if(!id||!/^[a-f0-9-]{36}$/i.test(id))throw new Error(t('invalidJob'));
