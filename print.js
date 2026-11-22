@@ -1,7 +1,7 @@
 const t = uiText;
 const uiLang = chrome.i18n.getUILanguage();
-document.documentElement.lang = uiLang;
-document.documentElement.dir = /^(he|ar|fa|ur)(-|$)/i.test(uiLang) ? 'rtl' : 'ltr';
+document.documentElement.lang = /^he(?:-|$)/i.test(uiLang) ? 'he' : 'en';
+document.documentElement.dir = /^he(?:-|$)/i.test(uiLang) ? 'rtl' : 'ltr';
 const labels = {en:{undo:'Undo',redo:'Redo',add:'Add text',remove:'Remove',hint:'Select text to format it. Edit text directly. Select an image and press Delete or Backspace to remove it. Use Ctrl+Z to undo and Ctrl+P to print.'},he:{undo:'בטל',redo:'בצע שוב',add:'הוסף טקסט',remove:'הסר',hint:'סמנו טקסט כדי לעצב אותו. ניתן לערוך ישירות. בחרו תמונה ולחצו Delete או Backspace להסרה. Ctrl+Z לביטול ו־Ctrl+P להדפסה.'}};
 const l = labels[uiLang.split(/[-_]/)[0].toLowerCase()] || labels.en;
 for (const [id,value] of [['print-label',t('printButton')],['undo-label',l.undo],['redo-label',l.redo],['add-label',l.add],['remove-label',l.remove],['hint',l.hint]]) document.getElementById(id).textContent=value;
@@ -22,6 +22,8 @@ const undoButton=document.getElementById('undo'), redoButton=document.getElement
 let history=[],position=-1,selectedImage=null,restoring=false,recordTimer,savedRange=null;
 const blockTags=new Set(['P','DIV','SECTION','ARTICLE','HEADER','FOOTER','MAIN','H1','H2','H3','H4','H5','H6','UL','OL','LI','BLOCKQUOTE','PRE','TABLE','FIGURE','FIGCAPTION','DL','DT','DD','IMG']);
 const deleteBlockButton=document.getElementById('delete-block');
+deleteBlockButton.setAttribute('aria-label',isHebrew?'הסר מקטע זה':'Remove this block');
+deleteBlockButton.setAttribute('title',isHebrew?'הסר מקטע זה':'Remove this block');
 let hoveredBlock=null;
 function pickBlock(target){
   if(!(target instanceof Element)||!content.contains(target))return null;
