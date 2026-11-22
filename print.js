@@ -29,10 +29,12 @@ function pickBlock(target){
   while(current&&current!==content){if(blockTags.has(current.tagName))return current;current=current.parentElement;}
   return null;
 }
-function hideBlockAction(){hoveredBlock=null;deleteBlockButton.hidden=true;}
+function hideBlockAction(){if(hoveredBlock)hoveredBlock.classList.remove('block-hover-target');hoveredBlock=null;deleteBlockButton.hidden=true;}
 function showBlockAction(block){
   if(!block||!block.isConnected){hideBlockAction();return;}
+  if(hoveredBlock&&hoveredBlock!==block)hoveredBlock.classList.remove('block-hover-target');
   hoveredBlock=block;
+  hoveredBlock.classList.add('block-hover-target');
   const rect=block.getBoundingClientRect();
   if(!rect.width||!rect.height){hideBlockAction();return;}
   deleteBlockButton.hidden=false;
@@ -57,7 +59,7 @@ window.addEventListener('resize',hideBlockAction);
 function prepareImages(){for(const img of content.querySelectorAll('img')){img.tabIndex=0;img.setAttribute('aria-label',(img.alt||(isHebrew?'תמונה':'Image'))+(isHebrew?' — Enter לבחירה, Delete למחיקה':' — Enter to select, Delete to remove'));}}
 function removeSelectedImage(){if(!selectedImage)return false;clearTimeout(recordTimer);snapshot();const image=selectedImage;clearImageSelection();image.remove();snapshot();content.focus();return true;}
 function clearImageSelection(){ if(selectedImage) selectedImage.classList.remove('selected-for-removal'); selectedImage=null; }
-function snapshot(){if(restoring)return;const html=content.innerHTML.replace(/ class="selected-for-removal"/g,'');if(history[position]===html)return;history=history.slice(0,position+1);history.push(html);if(history.length>80)history.shift();position=history.length-1;refresh();}
+function snapshot(){if(restoring)return;const html=content.innerHTML.replace(/ class="selected-for-removal"/g,'').replace(/ class="block-hover-target"/g,'');if(history[position]===html)return;history=history.slice(0,position+1);history.push(html);if(history.length>80)history.shift();position=history.length-1;refresh();}
 function refresh(){undoButton.disabled=position<=0;redoButton.disabled=position>=history.length-1;}
 function restore(next){if(next<0||next>=history.length)return;restoring=true;hideBlockAction();clearImageSelection();content.innerHTML=history[next];prepareImages();position=next;refresh();restoring=false;content.focus();}
 function safeTextStyle(style){
