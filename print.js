@@ -61,7 +61,7 @@ function removeSelectedImage(){if(!selectedImage)return false;clearTimeout(recor
 function clearImageSelection(){ if(selectedImage) selectedImage.classList.remove('selected-for-removal'); selectedImage=null; }
 function snapshot(){if(restoring)return;const copy=content.cloneNode(true);for(const el of copy.querySelectorAll('.selected-for-removal,.block-hover-target')){el.classList.remove('selected-for-removal','block-hover-target');if(!el.classList.length)el.removeAttribute('class');}const html=copy.innerHTML;if(history[position]===html)return;history=history.slice(0,position+1);history.push(html);if(history.length>80)history.shift();position=history.length-1;refresh();}
 function refresh(){undoButton.disabled=position<=0;redoButton.disabled=position>=history.length-1;}
-function restore(next){if(next<0||next>=history.length)return;const scrollX=window.scrollX,scrollY=window.scrollY;restoring=true;hideBlockAction();clearImageSelection();savedRange=null;content.innerHTML=history[next];prepareImages();position=next;refresh();restoring=false;content.focus({preventScroll:true});window.scrollTo(scrollX,scrollY);}
+function restore(next){if(next<0||next>=history.length)return;const scrollX=window.scrollX,scrollY=window.scrollY;restoring=true;hideBlockAction();clearImageSelection();savedRange=null;content.innerHTML=history[next];prepareImages();position=next;refresh();restoring=false;window.scrollTo(scrollX,scrollY);}
 function safeTextStyle(style){
   const result=[];
   for(const declaration of style.split(';')){
@@ -166,7 +166,10 @@ document.addEventListener('keydown',event=>{
   }
   if(modifier&&(key==='z'||key==='y')){
     const target=event.target;
-    if(target instanceof HTMLElement&&(target.isContentEditable||content.contains(target))){
+    const isEditableOutsideEditor=target instanceof HTMLElement&&
+      !content.contains(target)&&target!==content&&
+      (target.isContentEditable||['INPUT','TEXTAREA','SELECT'].includes(target.tagName));
+    if(!isEditableOutsideEditor){
       event.preventDefault();clearTimeout(recordTimer);
       if(key==='z'&&!event.shiftKey){snapshot();restore(position-1);}
       else if(key==='y'||(key==='z'&&event.shiftKey)){restore(position+1);}
