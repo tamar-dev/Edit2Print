@@ -35,3 +35,7 @@ table { border-collapse:collapse; max-width:100%; } th,td { border:1px solid #bb
   #content tr,#content figure,#content blockquote{break-inside:avoid;page-break-inside:avoid;}
   #content img{max-height:240mm!important;object-fit:contain;}
 }
+
+/* Subtle preview of the exact block that the contextual remove button will delete. */
+#content .block-hover-target{outline:1.5px solid #8da9c7!important;outline-offset:3px;background-color:rgba(124,169,210,.075);border-radius:3px;}
+@media print{#content .block-hover-target{outline:none!important;background-color:transparent!important;}}
