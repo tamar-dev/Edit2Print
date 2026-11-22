@@ -22,4 +22,4 @@ When you choose Edit2Print from the browser's context menu, the extension copies
 Some protected browser pages and embedded content cannot be accessed. Complex website layouts may not be reproduced exactly.
 
 ## Contact
-Add a support contact address before publishing.
+Support: tamar.sharabi123@gmail.com
