@@ -6,7 +6,7 @@ function syncContextMenu() {
     chrome.contextMenus.create({
       id: MENU_ID,
       title: uiText('printSelection'),
-      contexts: ['selection', 'image']
+      contexts: ['page', 'selection', 'image']
     });
   });
 }
@@ -23,7 +23,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     try {
       const results = await chrome.scripting.executeScript({
         target: { tabId: tab.id, frameIds: [info.frameId ?? 0] },
-        func: extractSelection
+        func: extractPrintableContent
       });
       payload = results?.[0]?.result ?? null;
     } catch (selectionError) {
@@ -55,13 +55,17 @@ function escapeAttribute(value) {
 }
 
 // This function runs in the webpage, not the extension service worker.
-function extractSelection() {
+function extractPrintableContent() {
   const selection = window.getSelection();
-  if (!selection || selection.rangeCount === 0 || selection.isCollapsed) return null;
-  const range = selection.getRangeAt(0);
-  const fragment = range.cloneContents();
+  const hasSelection = !!selection && selection.rangeCount > 0 && !selection.isCollapsed;
+  const range = hasSelection ? selection.getRangeAt(0) : null;
   const wrapper = document.createElement('div');
-  wrapper.appendChild(fragment);
+  if (range) {
+    wrapper.appendChild(range.cloneContents());
+  } else {
+    // Copy the document body rather than the live DOM: the source page remains untouched.
+    wrapper.appendChild(document.body.cloneNode(true));
+  }
   if (!wrapper.textContent?.trim() && !wrapper.querySelector('img,svg,canvas,table')) return null;
 
   // Keep images and links working when printed from an extension URL.
@@ -82,10 +86,10 @@ function extractSelection() {
     }
   }
   return {
-    kind: 'selection',
+    kind: hasSelection ? 'selection' : 'page',
     html: wrapper.innerHTML,
     title: document.title || 'Print selection',
-    direction: getComputedStyle(range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
-      ? range.commonAncestorContainer : range.commonAncestorContainer.parentElement).direction || 'auto'
+    direction: getComputedStyle(range ? (range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
+      ? range.commonAncestorContainer : range.commonAncestorContainer.parentElement) : document.body).direction || 'auto'
   };
 }
