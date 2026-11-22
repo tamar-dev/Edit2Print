@@ -51,7 +51,7 @@ content.addEventListener('pointerleave',event=>{if(event.relatedTarget!==deleteB
 deleteBlockButton.addEventListener('click',()=>{
   if(!hoveredBlock||!content.contains(hoveredBlock))return;
   clearTimeout(recordTimer);snapshot();
-  const block=hoveredBlock;hideBlockAction();block.remove();snapshot();content.focus();
+  const block=hoveredBlock;hideBlockAction();block.remove();snapshot();
 });
 deleteBlockButton.addEventListener('pointerleave',()=>hideBlockAction());
 window.addEventListener('scroll',()=>{if(hoveredBlock)showBlockAction(hoveredBlock);},{passive:true});
