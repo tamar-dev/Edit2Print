@@ -23,13 +23,13 @@ table { border-collapse:collapse; max-width:100%; } th,td { border:1px solid #bb
 .toolbar label{font-size:13px;}
 .toolbar button[aria-pressed="true"]{outline:2px solid #2359c4;outline-offset:1px;}
 
-/* Click-to-select removable content blocks in the editable preview. */
-#content.block-mode{cursor:crosshair;user-select:none;}
-#content .selected-block{outline:3px solid #2359c4!important;outline-offset:2px;background:rgba(35,89,196,.08);}
-#content.block-mode img{cursor:crosshair;}
+/* Contextual delete action only appears when hovering a content block. */
+#delete-block{position:fixed;z-index:90;width:30px;height:30px;padding:0;border-radius:9px;background:#fff0f0;color:#9b1c1c;border:1px solid #f0b7b7;box-shadow:0 2px 6px #0002;font-size:22px;line-height:1;}
+#delete-block:hover,#delete-block:focus-visible{background:#fbdada;outline:2px solid #9b1c1c;}
+#delete-block[hidden]{display:none;}
 /* Keep tables, images, headings and short paragraphs together where possible. */
 @media print{
-  #content .selected-block{outline:none!important;background:transparent!important;}
+  #delete-block{display:none!important;}
   #content h1,#content h2,#content h3,#content h4,#content h5,#content h6{break-after:avoid-page;page-break-after:avoid;}
   #content p,#content li{orphans:3;widows:3;}
   #content tr,#content figure,#content blockquote{break-inside:avoid;page-break-inside:avoid;}
