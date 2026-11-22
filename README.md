@@ -1,4 +1,4 @@
-# Edit2Print — v1.1.0
+# Edit2Print — v1.0.0
 
 **Select. Edit. Print.**
 
