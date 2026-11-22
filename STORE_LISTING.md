@@ -1,4 +1,4 @@
-# Chrome Web Store listing — Edit2Print v1.1.0
+# Chrome Web Store listing — Edit2Print v1.0.0
 
 **Name:** Edit2Print
 
