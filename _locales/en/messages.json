@@ -6,13 +6,13 @@
     "message": "Select, edit and print webpage content. Remove unwanted text and images, or save as PDF."
   },
   "printSelection": {
-    "message": "Print selection"
+    "message": "Edit & Print"
   },
   "printButton": {
     "message": "Print"
   },
   "printPageTitle": {
-    "message": "Print selection"
+    "message": "Edit & Print"
   },
   "errorTitle": {
     "message": "Print error"
