@@ -52,6 +52,9 @@ deleteBlockButton.addEventListener('click',()=>{
   if(!hoveredBlock||!content.contains(hoveredBlock))return;
   clearTimeout(recordTimer);snapshot();
   const block=hoveredBlock;hideBlockAction();block.remove();snapshot();
+  // The contextual delete button becomes hidden; move focus to a stable control.
+  // Otherwise Chrome can route Ctrl+Z to the browser instead of this editor.
+  undoButton.focus({preventScroll:true});
 });
 deleteBlockButton.addEventListener('pointerleave',()=>hideBlockAction());
 window.addEventListener('scroll',()=>{if(hoveredBlock)showBlockAction(hoveredBlock);},{passive:true});
