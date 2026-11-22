@@ -162,20 +162,22 @@ document.getElementById('remove').addEventListener('click',()=>{
 });
 document.addEventListener('keydown',event=>{
   const key=event.key.toLowerCase();
+  // event.code remains KeyZ/KeyY with Hebrew and other keyboard layouts.
+  const shortcut=event.code.startsWith('Key')?event.code.slice(3).toLowerCase():key;
   const modifier=(event.ctrlKey||event.metaKey)&&!event.altKey;
-  if(modifier&&key==='p'){event.preventDefault();document.getElementById('print').click();return;}
-  if(modifier&&['b','i','u'].includes(key)&&selectionInEditor()){
-    event.preventDefault();formatSelection({b:'bold',i:'italic',u:'underline'}[key]);return;
+  if(modifier&&shortcut==='p'){event.preventDefault();document.getElementById('print').click();return;}
+  if(modifier&&['b','i','u'].includes(shortcut)&&selectionInEditor()){
+    event.preventDefault();formatSelection({b:'bold',i:'italic',u:'underline'}[shortcut]);return;
   }
-  if(modifier&&(key==='z'||key==='y')){
+  if(modifier&&(shortcut==='z'||shortcut==='y')){
     const target=event.target;
     const isEditableOutsideEditor=target instanceof HTMLElement&&
       !content.contains(target)&&target!==content&&
       (target.isContentEditable||['INPUT','TEXTAREA','SELECT'].includes(target.tagName));
     if(!isEditableOutsideEditor){
       event.preventDefault();clearTimeout(recordTimer);
-      if(key==='z'&&!event.shiftKey){snapshot();restore(position-1);}
-      else if(key==='y'||(key==='z'&&event.shiftKey)){restore(position+1);}
+      if(shortcut==='z'&&!event.shiftKey){snapshot();restore(position-1);}
+      else if(shortcut==='y'||(shortcut==='z'&&event.shiftKey)){restore(position+1);}
     }
     return;
   }
