@@ -1,0 +1,38 @@
+{
+  "extensionName": {
+    "message": "Just Print Selection"
+  },
+  "extensionDescription": {
+    "message": "Print selected text and images, or save just part of a webpage as PDF."
+  },
+  "printSelection": {
+    "message": "Print selection"
+  },
+  "printButton": {
+    "message": "Print"
+  },
+  "printPageTitle": {
+    "message": "Print selection"
+  },
+  "errorTitle": {
+    "message": "Print error"
+  },
+  "errorHeading": {
+    "message": "Unable to print selection"
+  },
+  "errorDescription": {
+    "message": "Select the content again. The extension cannot run on Chrome internal pages or some protected websites."
+  },
+  "printError": {
+    "message": "Unable to print"
+  },
+  "invalidJob": {
+    "message": "Invalid print job"
+  },
+  "missingJob": {
+    "message": "Print job expired or missing"
+  },
+  "noSelection": {
+    "message": "No printable selection found"
+  }
+}

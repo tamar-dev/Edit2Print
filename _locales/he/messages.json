@@ -1,0 +1,38 @@
+{
+  "extensionName": {
+    "message": "Just Print Selection"
+  },
+  "extensionDescription": {
+    "message": "הדפסת טקסט ותמונות מסומנים או שמירת חלק מדף אינטרנט כ־PDF."
+  },
+  "printSelection": {
+    "message": "הדפס בחירה"
+  },
+  "printButton": {
+    "message": "הדפס"
+  },
+  "printPageTitle": {
+    "message": "הדפסת בחירה"
+  },
+  "errorTitle": {
+    "message": "שגיאה בהדפסה"
+  },
+  "errorHeading": {
+    "message": "לא ניתן להדפיס את הבחירה"
+  },
+  "errorDescription": {
+    "message": "יש לבחור מחדש את התוכן. התוסף אינו פועל בדפים פנימיים של Chrome ובחלק מהאתרים המוגנים."
+  },
+  "printError": {
+    "message": "לא ניתן להדפיס"
+  },
+  "invalidJob": {
+    "message": "משימת הדפסה לא תקינה"
+  },
+  "missingJob": {
+    "message": "משימת ההדפסה פגה או אינה קיימת"
+  },
+  "noSelection": {
+    "message": "לא נמצאה בחירה להדפסה"
+  }
+}
