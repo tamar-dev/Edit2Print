@@ -80,6 +80,9 @@ function snapshot(){
   refresh();
 }
 function refresh(){undoButton.disabled=position<=0;redoButton.disabled=position>=history.length-1;}
+function flushPendingEdit(){if(recordTimer){clearTimeout(recordTimer);recordTimer=null;snapshot();}}
+function undo(){flushPendingEdit();restore(position-1);}
+function redo(){flushPendingEdit();restore(position+1);}
 function restore(next){if(next<0||next>=history.length)return;const scrollX=window.scrollX,scrollY=window.scrollY;restoring=true;hideBlockAction();clearImageSelection();savedRange=null;content.innerHTML=history[next];prepareImages();position=next;refresh();restoring=false;window.scrollTo(scrollX,scrollY);}
 function safeTextStyle(style){
   const result=[];
@@ -165,7 +168,7 @@ for(const button of document.querySelectorAll('.toolbar button')){
   if(['bold','italic','underline'].includes(button.id))button.addEventListener('mousedown',event=>event.preventDefault());
 }
 
-content.addEventListener('input',()=>{clearTimeout(recordTimer);recordTimer=setTimeout(snapshot,250);});
+content.addEventListener('input',()=>{clearTimeout(recordTimer);recordTimer=setTimeout(()=>{recordTimer=null;snapshot();},250);});
 content.addEventListener('focusin',event=>{if(event.target instanceof HTMLImageElement){clearImageSelection();selectedImage=event.target;selectedImage.classList.add('selected-for-removal');}});
 content.addEventListener('click',event=>{const image=event.target.closest?.('img');clearImageSelection();if(image&&content.contains(image)){selectedImage=image;image.classList.add('selected-for-removal');}});
 content.addEventListener('paste',event=>{event.preventDefault();const text=event.clipboardData?.getData('text/plain')||'';const selection=window.getSelection();if(!selection?.rangeCount)return;const range=selection.getRangeAt(0);if(!content.contains(range.commonAncestorContainer))return;range.deleteContents();const node=document.createTextNode(text);range.insertNode(node);range.setStartAfter(node);range.collapse(true);selection.removeAllRanges();selection.addRange(range);snapshot();});
@@ -191,9 +194,9 @@ document.addEventListener('keydown',event=>{
       !content.contains(target)&&target!==content&&
       (target.isContentEditable||['INPUT','TEXTAREA','SELECT'].includes(target.tagName));
     if(!isEditableOutsideEditor){
-      event.preventDefault();clearTimeout(recordTimer);
-      if(shortcut==='z'&&!event.shiftKey){snapshot();restore(position-1);}
-      else if(shortcut==='y'||(shortcut==='z'&&event.shiftKey)){restore(position+1);}
+      event.preventDefault();
+      if(shortcut==='z'&&!event.shiftKey)undo();
+      else if(shortcut==='y'||(shortcut==='z'&&event.shiftKey))redo();
     }
     return;
   }
@@ -206,8 +209,8 @@ document.addEventListener('keydown',event=>{
   }
 });
 document.getElementById('add-text').addEventListener('click',()=>{clearImageSelection();const p=document.createElement('p');p.appendChild(document.createElement('br'));content.appendChild(p);snapshot();content.focus();const range=document.createRange();range.selectNodeContents(p);range.collapse(true);const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);});
-undoButton.addEventListener('click',()=>{clearTimeout(recordTimer);snapshot();restore(position-1);});
-redoButton.addEventListener('click',()=>{clearTimeout(recordTimer);restore(position+1);});
+undoButton.addEventListener('click',undo);
+redoButton.addEventListener('click',redo);
 document.getElementById('print').addEventListener('click',()=>{clearTimeout(recordTimer);snapshot();hideBlockAction();clearImageSelection();window.print();});
 (async()=>{
  const id=new URLSearchParams(location.search).get('id');
