@@ -1,45 +1,60 @@
-# Chrome Web Store listing — Edit2Print v1.0.0
+# Edit2Print — Chrome Web Store listing (v1.0.0)
 
+## English
 **Name:** Edit2Print
-
 **Tagline:** Select. Edit. Print.
+**Short description:** Edit and print selected webpage content or entire pages. Remove unwanted elements and save as PDF.
 
-**Short description:** Select, edit and print webpage content. Remove unwanted text and images, or save as PDF.
+### Detailed description
+Print the content you want — your way.
 
-**Detailed description (English):**
+Edit2Print opens a clean, editable print preview directly from your browser's right-click menu. Select part of a webpage, or leave nothing selected to edit the whole page.
 
-Print only what you need. Edit it first.
+**What you can do**
+- Edit text before printing.
+- Remove unwanted sections, text, and images.
+- Format text with font size, color, bold, italic, and underline.
+- Add paragraphs, undo, and redo changes.
+- Print the result or save it as a PDF using Chrome.
 
-Edit2Print lets you select text and images from a webpage, open a clean editable preview, and make changes before printing.
+Supports English and Hebrew, including right-to-left text.
 
-**Features**
-- Edit selected text directly in the preview.
-- Remove unwanted text and images.
-- Add text with a new paragraph.
-- Undo and redo edits with toolbar controls.
-- Keep the toolbar visible while scrolling long documents.
-- Print selected text and images without printing the whole webpage.
-- Save edited content as PDF using Chrome's built-in print dialog.
-- Support for Hebrew and right-to-left text.
+No account is required. Preview content is passed through temporary local extension storage and deleted after it is loaded. Images may still load from their source websites.
 
-No account or developer-operated server is required. Selected content is temporarily stored locally to open the preview, then removed from extension storage. Images may be fetched from their original websites.
+**Note:** Some protected pages and complex website layouts may not display exactly as on the original website.
 
-Some websites, protected pages, embedded frames, and complex layouts may not reproduce exactly as displayed.
+## עברית
+**שם:** Edit2Print
+**סיסמה:** בוחרים. עורכים. מדפיסים.
+**תיאור קצר:** עורכים ומדפיסים חלק מדף אינטרנט או עמוד שלם. מסירים תוכן מיותר ושומרים גם כ־PDF.
 
-**תיאור בעברית:**
+### תיאור מפורט
+מדפיסים בדיוק את מה שרוצים — אחרי עריכה.
 
-Edit2Print — בוחרים, עורכים ומדפיסים.
+Edit2Print פותח תצוגה נקייה לעריכה ולהדפסה ישירות מתפריט הלחיצה הימנית בדפדפן. אפשר לסמן רק את התוכן הרצוי, או לא לסמן דבר ולערוך את העמוד כולו.
 
-מסמנים טקסט ותמונות בדף אינטרנט, לוחצים לחיצה ימנית ובוחרים ״הדפס בחירה״. בתצוגת העריכה אפשר לשנות טקסט, למחוק תמונות וקטעים מיותרים, להוסיף פסקאות ולהשתמש בכפתורי ביטול וביצוע חוזר. סרגל הכלים נשאר גלוי גם כשגוללים במסמך ארוך. בסיום אפשר להדפיס או לשמור כ־PDF באמצעות Chrome. כולל תמיכה בעברית וב־RTL.
+**מה אפשר לעשות?**
+- לערוך טקסט לפני ההדפסה.
+- להסיר מקטעים, טקסט ותמונות מיותרים.
+- לשנות גודל גופן וצבע, ולהוסיף הדגשה, הטיה וקו תחתון.
+- להוסיף פסקאות, לבטל פעולות ולבצע אותן מחדש.
+- להדפיס או לשמור כ־PDF באמצעות Chrome.
 
-**Suggested category:** Productivity
+תמיכה בעברית ובאנגלית, כולל כיווניות מימין לשמאל.
 
-**Single purpose:** Select and edit webpage content for printing or saving as PDF through Chrome's print dialog.
+אין צורך בחשבון. התוכן מועבר לתצוגת העריכה באמצעות אחסון מקומי זמני ונמחק ממנו לאחר הטעינה. תמונות עשויות להיטען מאתרי המקור.
 
-**Permission justification:** `contextMenus` adds the command; `activeTab` and `scripting` access selected content only after a user click; `storage` temporarily passes selected markup to the editable preview tab.
+**לתשומת לבכם:** דפים מוגנים ועיצובים מורכבים לא תמיד יוצגו בדיוק כפי שהם באתר המקורי.
 
-**Data-use disclosure:** No developer-operated collection or sale of user data. Selected content is temporarily held locally, then removed on preview load. Images can be fetched from their original hosts.
+---
 
-**Brand note:** The name Edit2Print was used historically for a print procurement product (ControlP/TripleArc, 2002). Brand/trademark clearance has not been established. Do not assume exclusive rights to the name.
+## Developer submission notes (not for the public description)
+**Category:** Productivity
 
-**Before publishing:** Verify the branding, add a real support contact, host `PRIVACY.md` at a public HTTPS URL if required, capture genuine screenshots, test the updated extension in Chrome, and complete Chrome Web Store disclosures truthfully.
+**Single purpose:** Edit selected webpage content or full pages before printing or saving as PDF.
+
+**Permission justification:** `contextMenus` adds the user-invoked action; `activeTab` and `scripting` access the current page only after invocation; `storage` temporarily passes content to the editor.
+
+**Privacy:** See PRIVACY.md. Complete Chrome Web Store data disclosures according to the implementation.
+
+**Before submission:** Add a real support contact; verify public privacy-policy URL; capture authentic screenshots; test Hebrew/English and selected/full-page workflows; check icon branding; review name availability and trademarks.
