@@ -59,9 +59,9 @@ window.addEventListener('resize',hideBlockAction);
 function prepareImages(){for(const img of content.querySelectorAll('img')){img.tabIndex=0;img.setAttribute('aria-label',(img.alt||(isHebrew?'תמונה':'Image'))+(isHebrew?' — Enter לבחירה, Delete למחיקה':' — Enter to select, Delete to remove'));}}
 function removeSelectedImage(){if(!selectedImage)return false;clearTimeout(recordTimer);snapshot();const image=selectedImage;clearImageSelection();image.remove();snapshot();content.focus();return true;}
 function clearImageSelection(){ if(selectedImage) selectedImage.classList.remove('selected-for-removal'); selectedImage=null; }
-function snapshot(){if(restoring)return;const html=content.innerHTML.replace(/ class="selected-for-removal"/g,'').replace(/ class="block-hover-target"/g,'');if(history[position]===html)return;history=history.slice(0,position+1);history.push(html);if(history.length>80)history.shift();position=history.length-1;refresh();}
+function snapshot(){if(restoring)return;const copy=content.cloneNode(true);for(const el of copy.querySelectorAll('.selected-for-removal,.block-hover-target')){el.classList.remove('selected-for-removal','block-hover-target');if(!el.classList.length)el.removeAttribute('class');}const html=copy.innerHTML;if(history[position]===html)return;history=history.slice(0,position+1);history.push(html);if(history.length>80)history.shift();position=history.length-1;refresh();}
 function refresh(){undoButton.disabled=position<=0;redoButton.disabled=position>=history.length-1;}
-function restore(next){if(next<0||next>=history.length)return;restoring=true;hideBlockAction();clearImageSelection();content.innerHTML=history[next];prepareImages();position=next;refresh();restoring=false;content.focus();}
+function restore(next){if(next<0||next>=history.length)return;const scrollX=window.scrollX,scrollY=window.scrollY;restoring=true;hideBlockAction();clearImageSelection();savedRange=null;content.innerHTML=history[next];prepareImages();position=next;refresh();restoring=false;content.focus({preventScroll:true});window.scrollTo(scrollX,scrollY);}
 function safeTextStyle(style){
   const result=[];
   for(const declaration of style.split(';')){
