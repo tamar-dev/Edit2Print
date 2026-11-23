@@ -8,6 +8,57 @@ for (const [id,value] of [['print-label',t('printButton')],['undo-label',l.undo]
 const formattingLabels=uiLang.toLowerCase().startsWith('he')?{size:'גודל',color:'צבע',bold:'מודגש',italic:'נטוי',underline:'קו תחתון'}:{size:'Size',color:'Color',bold:'Bold',italic:'Italic',underline:'Underline'};
 for(const [id,value] of [['font-size-label',formattingLabels.size],['font-color-label',formattingLabels.color]])document.getElementById(id).textContent=value;
 for(const key of ['bold','italic','underline'])document.getElementById(key).setAttribute('aria-label',formattingLabels[key]);
+const helpCopy = {
+  en: {
+    hint: 'Your page is ready. Click to edit, select text to format, or remove what you don’t need.',
+    help: 'How to use Edit2Print',
+    steps: [
+      'On any regular webpage, select text or images (or select nothing for the whole page), right-click and choose Edit & Print.',
+      'Click anywhere in the preview to edit text. Select words before using the formatting tools above.',
+      'Hover over a section and click × to remove it. Click an image to select it, then use Remove or Delete.',
+      'Use Add text for a new paragraph, and Undo or Redo if you change your mind.',
+      'Choose Print to print the result or Save as PDF in Chrome’s print dialog.'
+    ],
+    tip: 'Changes affect only this preview, not the original webpage.',
+    show: 'Show help',
+    hide: 'Hide help'
+  },
+  he: {
+    hint: 'התוכן מוכן לעריכה. לחצו על טקסט כדי לשנות אותו, סמנו מילים לעיצוב או הסירו מה שלא צריך.',
+    help: 'איך משתמשים ב־Edit2Print?',
+    steps: [
+      'באתר רגיל סמנו טקסט או תמונות, או השאירו ללא סימון כדי לערוך עמוד שלם. לחצו לחיצה ימנית ובחרו ״עריכה והדפסה״.',
+      'לחצו על הטקסט כדי לערוך אותו. כדי לשנות גודל, צבע או עיצוב, סמנו קודם את המילים הרצויות.',
+      'הצביעו על מקטע ולחצו × כדי להסיר אותו. אפשר לבחור תמונה וללחוץ על ״הסר״ או Delete.',
+      'השתמשו ב״הוסף טקסט״ ליצירת פסקה חדשה, וב״בטל״ או ״בצע שוב״ לשינוי פעולות.',
+      'לחצו ״הדפס״ כדי להדפיס, או בחרו שמירה כ־PDF בחלון ההדפסה של Chrome.'
+    ],
+    tip: 'השינויים מתבצעים בתצוגת העריכה בלבד. האתר המקורי לא משתנה.',
+    show: 'הצג עזרה',
+    hide: 'הסתר עזרה'
+  }
+};
+const helpLang = /^he(?:-|$)/i.test(uiLang) ? helpCopy.he : helpCopy.en;
+document.getElementById('hint').textContent = helpLang.hint;
+document.getElementById('help-title').textContent = helpLang.help;
+const helpSteps = document.getElementById('help-steps');
+for (const step of helpLang.steps) {
+  const item = document.createElement('li');
+  item.textContent = step;
+  helpSteps.appendChild(item);
+}
+document.getElementById('help-tip').textContent = helpLang.tip;
+const helpToggle = document.getElementById('help-toggle');
+const helpPanel = document.getElementById('help-panel');
+helpToggle.setAttribute('aria-label', helpLang.show);
+helpToggle.title = helpLang.show;
+helpToggle.addEventListener('click', () => {
+  const expanded = helpToggle.getAttribute('aria-expanded') === 'true';
+  helpPanel.hidden = expanded;
+  helpToggle.setAttribute('aria-expanded', String(!expanded));
+  helpToggle.setAttribute('aria-label', expanded ? helpLang.show : helpLang.hide);
+  helpToggle.title = expanded ? helpLang.show : helpLang.hide;
+});
 const content=document.getElementById('content');
 const isHebrew=uiLang.split(/[-_]/)[0].toLowerCase()==='he';
 content.setAttribute('aria-label',isHebrew?'תוכן להדפסה שניתן לערוך':'Editable print content');
