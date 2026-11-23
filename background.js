@@ -43,9 +43,14 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     await chrome.storage.local.set({ [`print_${id}`]: payload });
     await chrome.tabs.create({ url: chrome.runtime.getURL(`print.html?id=${encodeURIComponent(id)}`), active: true });
   } catch (error) {
-    console.error('Print Selection:', error);
+    const isRestrictedPage = /Cannot access contents of the page|Extension manifest must request permission|Cannot access a chrome:|Cannot access a chrome-extension:|The extensions gallery cannot be scripted/i.test(error?.message || '');
+    if (isRestrictedPage) {
+      console.info('Edit2Print: Chrome blocked access to this protected page.');
+    } else {
+      console.error('Edit2Print:', error);
+    }
     await chrome.tabs.create({
-      url: chrome.runtime.getURL(`error.html?message=${encodeURIComponent(error.message || 'Unknown error')}`)
+      url: chrome.runtime.getURL(`error.html?${isRestrictedPage ? 'reason=protected' : `message=${encodeURIComponent(error.message || 'Unknown error')}`}`)
     });
   }
 });

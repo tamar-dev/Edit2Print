@@ -1,4 +1,4 @@
-# Edit2Print — v1.0.0
+# Edit2Print — v1.0.1
 
 **Select. Edit. Print.**
 
@@ -10,11 +10,13 @@ A lightweight Chrome Manifest V3 extension to select content from a webpage, edi
 3. Select the folder containing `manifest.json`.
 
 ## Use
-1. Highlight the desired webpage text and images, right-click, and choose **Print selection** (localized to Chrome UI language).
+1. Highlight the desired webpage text and images, right-click, and choose **Edit & Print** (localized to Chrome UI language).
 2. Edit the content directly in the preview. Remove unwanted text or images, add a paragraph, or use the Undo / Redo buttons.
 3. Click **Print** and print or choose **Save as PDF** in Chrome.
 
 You can also right-click a standalone image to open it in the editable print preview. The editing toolbar stays visible while scrolling long documents.
+
+The editor includes a short welcome hint and an optional **?** help panel with step-by-step instructions in English and Hebrew. Protected Chrome pages are not accessible; no extra host permissions are requested.
 
 ## Privacy
 No account or developer-operated server is required. Selected content is temporarily stored locally to open the preview and removed from extension storage after loading. Images may be fetched from their original websites.
