@@ -1,4 +1,4 @@
-# Edit2Print — Chrome Web Store listing (v1.0.0)
+# Edit2Print — Chrome Web Store listing (v1.0.1)
 
 ## English
 **Name:** Edit2Print
@@ -6,6 +6,14 @@
 **Short description:** Edit and print selected webpage content or entire pages. Remove unwanted elements and save as PDF.
 
 ### Detailed description
+**Select. Edit. Print.** Make webpage content ready to print in just a few clicks.
+
+**How it works**
+1. Open a regular webpage and select the text or images you want (or select nothing to use the entire page).
+2. Right-click and choose **Edit & Print**.
+3. Edit the content in the new tab: change text, format words, or remove unwanted parts.
+4. Click **Print** to print or choose **Save as PDF** in Chrome.
+
 Print the content you want — your way.
 
 Edit2Print opens a clean, editable print preview directly from your browser's right-click menu. Select part of a webpage, or leave nothing selected to edit the whole page.
@@ -29,6 +37,14 @@ No account is required. Preview content is passed through temporary local extens
 **תיאור קצר:** עורכים ומדפיסים חלק מדף אינטרנט או עמוד שלם. מסירים תוכן מיותר ושומרים גם כ־PDF.
 
 ### תיאור מפורט
+**בוחרים. עורכים. מדפיסים.** מכינים תוכן מהאינטרנט להדפסה בכמה לחיצות פשוטות.
+
+**איך זה עובד?**
+1. פותחים אתר רגיל ומסמנים את הטקסט או התמונות הרצויים, או משאירים ללא סימון כדי לערוך עמוד שלם.
+2. לוחצים לחיצה ימנית ובוחרים **עריכה והדפסה**.
+3. עורכים בחלונית החדשה: משנים טקסט, מעצבים מילים ומסירים חלקים מיותרים.
+4. לוחצים **הדפס** כדי להדפיס או לשמור כ־PDF דרך Chrome.
+
 מדפיסים בדיוק את מה שרוצים — אחרי עריכה.
 
 Edit2Print פותח תצוגה נקייה לעריכה ולהדפסה ישירות מתפריט הלחיצה הימנית בדפדפן. אפשר לסמן רק את התוכן הרצוי, או לא לסמן דבר ולערוך את העמוד כולו.
