@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Print selection</title><link rel="stylesheet" href="print.css"></head>
+<title>Edit2Print</title><link rel="stylesheet" href="print.css"></head>
 <body>
 <header class="toolbar"><strong>Edit2Print</strong><div class="actions">
 <label for="font-size" id="font-size-label">Size</label><select id="font-size" aria-label="Font size"><option value="12">12</option><option value="14">14</option><option value="16" selected>16</option><option value="18">18</option><option value="20">20</option><option value="24">24</option><option value="32">32</option><option value="40">40</option></select>
@@ -12,8 +12,11 @@
 <button type="button" id="redo" class="secondary" disabled>↷ <span id="redo-label"></span></button>
 <button type="button" id="add-text" class="secondary">＋ <span id="add-label"></span></button>
 <button type="button" id="remove" class="secondary">✕ <span id="remove-label"></span></button>
+<button type="button" id="help-toggle" class="secondary" aria-expanded="false" aria-controls="help-panel" aria-label="Help">?</button>
 <button type="button" id="print">🖨 <span id="print-label"></span></button>
 </div></header>
-<p id="hint"></p><main id="content" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Editable print content"></main>
+<p id="hint"></p>
+<section id="help-panel" class="help-panel" hidden aria-labelledby="help-title"><h2 id="help-title"></h2><ol id="help-steps"></ol><p id="help-tip"></p></section>
+<main id="content" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Editable print content"></main>
 <button type="button" id="delete-block" hidden aria-label="Remove this block" title="Remove this block">×</button>
 <p id="status" role="status"></p><script src="ui-locale.js"></script><script src="print.js"></script></body></html>
