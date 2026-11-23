@@ -39,3 +39,13 @@ table { border-collapse:collapse; max-width:100%; } th,td { border:1px solid #bb
 /* Subtle preview of the exact block that the contextual remove button will delete. */
 #content .block-hover-target{outline:1.5px solid #8da9c7!important;outline-offset:3px;background-color:rgba(124,169,210,.075);border-radius:3px;}
 @media print{#content .block-hover-target{outline:none!important;background-color:transparent!important;}}
+
+/* Optional, readable help that stays out of the printout. */
+.help-panel { box-sizing:border-box; max-width:800px; margin:12px auto 0; padding:18px 24px; background:#fff; border:1px solid #dbe2ec; border-radius:10px; box-shadow:0 2px 8px #0001; line-height:1.65; }
+.help-panel[hidden] { display:none; }
+.help-panel h2 { font-size:17px; margin:0 0 8px; }
+.help-panel ol { padding-inline-start:24px; margin:8px 0; }
+.help-panel li { margin:6px 0; }
+.help-panel p { margin:10px 0 0; color:#526071; }
+#help-toggle { font-weight:700; min-width:38px; }
+@media print { .help-panel { display:none!important; } }
