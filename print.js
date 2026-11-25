@@ -264,16 +264,28 @@ document.addEventListener('keydown',event=>{
 document.getElementById('add-text').addEventListener('click',()=>{clearImageSelection();const p=document.createElement('p');p.appendChild(document.createElement('br'));content.appendChild(p);snapshot();content.focus();const range=document.createRange();range.selectNodeContents(p);range.collapse(true);const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);});
 undoButton.addEventListener('click',undo);
 redoButton.addEventListener('click',redo);
-document.getElementById('print').addEventListener('click',()=>{clearTimeout(recordTimer);snapshot();hideBlockAction();clearImageSelection();window.print();});
+let sourceTitle='';
+function printTitle(){
+  const candidates=[...content.querySelectorAll('h1,h2,h3,h4,h5,h6')].map(heading=>heading.textContent);
+  candidates.push(sourceTitle,'Edit2Print');
+  for(const candidate of candidates){
+    const title=String(candidate||'').replace(/[<>:"/\\|?*\x00-\x1f]/g,' ').replace(/\s+/g,' ').trim().slice(0,120).replace(/[. ]+$/g,'');
+    if(title)return title;
+  }
+  return 'Edit2Print';
+}
+window.addEventListener('beforeprint',()=>{document.title=printTitle();});
+document.getElementById('print').addEventListener('click',()=>{clearTimeout(recordTimer);snapshot();hideBlockAction();clearImageSelection();document.title=printTitle();window.print();});
 (async()=>{
  const id=new URLSearchParams(location.search).get('id');
  if(!id||!/^[a-f0-9-]{36}$/i.test(id))throw new Error(t('invalidJob'));
  const key='print_'+id;const result=await chrome.storage.local.get(key);const payload=result[key];
  if(!payload)throw new Error(t('missingJob'));
  await chrome.storage.local.remove(key);
- document.title=t('printPageTitle');
+ sourceTitle=payload.title||'';
  content.dir=['ltr','rtl','auto'].includes(payload.direction)?payload.direction:'auto';
  content.innerHTML=cleanHtml(payload.html);
+ document.title=printTitle();
  prepareImages();
  snapshot();
 })().catch(err=>{status.textContent=t('printError')+': '+err.message;content.contentEditable='false';});
